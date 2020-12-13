@@ -9,10 +9,10 @@ function createImageTag(selector, imgNumber, currentCount, position){
         else img.id = `r${currentCount}`;
         
     }
-    else if(position === 'up' || position === 'down') {
+    else if(position === 'up' || position === 'bottom') {
         img.style.left = `${currentCount * 100}px`;
         if(position === 'up') img.id = `u${currentCount}`;
-        else img.id = `d${currentCount}`;
+        else img.id = `b${currentCount}`;
     }
 
     document.querySelector(`.${selector}`).appendChild(img);
@@ -25,7 +25,7 @@ function deleteImageTags(){
     });
 }
 
-function dynamicImageInserting(up, down, left, right){
+function dynamicImageInserting(up, bottom, left, right){
     deleteImageTags();
 
     let imgNumber = 1;
@@ -34,8 +34,8 @@ function dynamicImageInserting(up, down, left, right){
         imgNumber++;
     }
 
-    for(let i = 0; i < (down / 100); i++){
-        createImageTag('bottomImageLine', imgNumber, i, 'down');
+    for(let i = 0; i < (bottom / 100); i++){
+        createImageTag('bottomImageLine', imgNumber, i, 'bottom');
         imgNumber++;
     }
 
@@ -73,44 +73,60 @@ function resizingContent() {
     dynamicImageInserting(imageFrame.offsetWidth, imageFrame.offsetWidth, leftImageLine.offsetHeight, leftImageLine.offsetHeight);
 }
 
+function getImgId(way, index){
+    let direction = ['u', 'b', 'l', 'r'];
+    return `${direction[way]}${index}`;
+}
+
 function swapImageAnimation(){
     let waySelector = ['.upperImageLine img', '.bottomImageLine img', '.leftImageLine img', '.rightImageLine img'];
     let wayIndex = Math.floor(Math.random() * 4);
 
-    let imgArray = document.querySelectorAll(`${waySelector[wayIndex]}`);
-    let arrayIndex = Math.floor(Math.random() * imgArray.length);
+    let numberOfImg = document.querySelectorAll(`${waySelector[wayIndex]}`).length;
+    let index = Math.floor(Math.random() * numberOfImg);
 
-    if(arrayIndex == (imgArray.length-1)) arrayIndex--;
+    if(index === (numberOfImg-1)) index--;
 
-    let animationId = setInterval(swap, 10);
+    let leftElement = document.getElementById(getImgId(wayIndex, index));
+    let rightElement = document.getElementById(getImgId(wayIndex, index+1));
+
+    let animationId = setInterval(swap, 5);
 
     let pos = 0;
     function swap(){
         if(pos === 100) clearInterval(animationId);
         else{
             if(wayIndex <= 1){
-                let value1 = imgArray[arrayIndex].style.left;
-                let value2 = imgArray[arrayIndex+1].style.left;
-                imgArray[arrayIndex].style.left = (parseInt(value1.slice(0,value1.length-2))+1) + 'px';
-                imgArray[arrayIndex+1].style.left = (parseInt(value2.slice(0,value2.length-2))-1) + 'px';
+                let value1 = leftElement.style.left;
+                let value2 = rightElement.style.left;
+                leftElement.style.left = (parseInt(value1.slice(0,value1.length-2))+1) + 'px';
+                rightElement.style.left = (parseInt(value2.slice(0,value2.length-2))-1) + 'px';
             }
             else{
-                let value1 = imgArray[arrayIndex].style.top;
-                let value2 = imgArray[arrayIndex+1].style.top;
-                imgArray[arrayIndex].style.top = (parseInt(value1.slice(0,value1.length-2))+1) + 'px';
-                imgArray[arrayIndex+1].style.top = (parseInt(value2.slice(0,value2.length-2))-1) + 'px';
+                let value1 = leftElement.style.top;
+                let value2 = rightElement.style.top;
+                leftElement.style.top = (parseInt(value1.slice(0,value1.length-2))+1) + 'px';
+                rightElement.style.top = (parseInt(value2.slice(0,value2.length-2))-1) + 'px';
             }
         }
         pos++;
     }
+
+    let leftId = leftElement.id;
+    leftElement.id = rightElement.id;
+    rightElement.id = leftId;
+}
+
+function periodicAnimationCaller() {
+    let id = setInterval(swapImageAnimation,1000);
 }
 
 window.onload = () => {
     resizingContent();
-    swapImageAnimation();
+    periodicAnimationCaller();
 
     window.addEventListener('resize', () => {
         resizingContent();
-        swapImageAnimation();
+        periodicAnimationCaller();
     });
 };
