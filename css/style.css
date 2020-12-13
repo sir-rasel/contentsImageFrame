@@ -1,0 +1,56 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.imageFrame {
+    width: 90%;
+    height: max-content;
+    background-color: lightgray;
+    margin: 10px auto;
+}
+
+.upperImageLine {
+    width: 100%;
+    height: 100px;
+    background-color: green;
+}
+
+.bottomImageLine {
+    width: 100%;
+    height: 100px;
+    background-color: black;
+}
+
+.leftImageLine {
+    width: 100px;
+    background-color: blue;
+    float: left;
+}
+
+.rightImageLine {
+    width: 100px;
+    background-color: red;
+    float: right;
+}
+
+.mainContent {
+    display: inline-block;
+    text-align: center;
+}
+
+.paragraphWrapper {
+    height: max-content;
+    padding: 1%;
+}
+
+.upperImageLine, .bottomImageLine, .leftImageLine, .rightImageLine {
+    position: relative;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    float: left;
+}
