@@ -117,8 +117,9 @@ function swapImageAnimation(){
     rightElement.id = leftId;
 }
 
+let id;
 function periodicAnimationCaller() {
-    let id = setInterval(swapImageAnimation,1000);
+    id = setInterval(swapImageAnimation,1000);
 }
 
 window.onload = () => {
@@ -127,6 +128,7 @@ window.onload = () => {
 
     window.addEventListener('resize', () => {
         resizingContent();
+        clearInterval(id);
         periodicAnimationCaller();
     });
 };
